@@ -1,0 +1,14 @@
+﻿@page "/usuarios/new"
+
+<div class="container">
+    <h1>Crear usuario</h1>
+    <div class="m-1 mb-3">
+        <NavLink class="btn btn-secondary" href="">Volver al inicio</NavLink>
+    </div>
+    <div class="m-1">
+        <UsuariosFormulario usuario="usuarioNuevo" />
+    </div>
+</div
+@code {
+    private Usuario usuarioNuevo = new Usuario();
+}

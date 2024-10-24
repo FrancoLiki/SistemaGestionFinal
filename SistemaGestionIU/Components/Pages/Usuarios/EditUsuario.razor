@@ -1,0 +1,31 @@
+﻿@page "/usuarios/{Id:int}/editar"
+@inject UsuariosService dataAccess
+
+<div class="container">
+    <h1>Editar usuario</h1>
+    <div class="m-1 mb-3">
+        <NavLink class="btn btn-secondary" href="">Volver al inicio</NavLink>
+    </div>
+    <div class="m-1">
+        @if (usuarioAEditar == null)
+        {
+            <p>No existen usuarios</p>
+        }
+        else
+        {
+            <UsuariosFormulario usuario="usuarioAEditar" />
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Usuario? usuarioAEditar;
+
+    protected override async Task OnInitializedAsync()
+    {
+        usuarioAEditar = await dataAccess.ObtenerUsuario(Id);
+    }
+}

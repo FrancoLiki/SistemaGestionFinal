@@ -1,0 +1,27 @@
+﻿@inject UsuariosService usuarioAccess
+@inject ProductosService productoAccess
+
+@page "/usuarios/{Id:int}"
+
+<NavLink class="btn btn-secondary" href=""> Cerrar sesión </NavLink>
+<h3>Ingreso usuario</h3>
+<h4>Bienvenido @usuario?.NombreUsuario </h4>
+
+
+
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Usuario? usuario = new Usuario();
+
+    protected override async Task OnInitializedAsync()
+    {
+        usuario = await usuarioAccess.ObtenerUsuario(Id);
+        
+    }
+
+
+}

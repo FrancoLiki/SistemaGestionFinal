@@ -1,0 +1,65 @@
+﻿@inject NavigationManager Navigation
+@inject UsuariosService dataAccess
+
+
+<EditForm Model="usuario" OnValidSubmit="@CrearOActualizarUsuario" FormName="usuarios-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-control">
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <InputText type="text" id="nombre" @bind-Value="usuario.Nombre" class="form-control" />
+            <ValidationMessage For="(() => usuario.Nombre)" />
+        </div>
+        <div class="mb-3">
+            <label for="apellido" class="form-label">Apellido</label>
+            <InputText type="text" id="apellido" @bind-Value="usuario.Apellido" class="form-control" />
+            <ValidationMessage For="(() => usuario.Apellido)" />
+        </div>
+        <div class="mb-3">
+            <label for="nombreUsuario" class="form-label">Nombre usuario</label>
+            <InputText type="text" id="nombreUsuario" @bind-Value="usuario.NombreUsuario" class="form-control"/>
+            <ValidationMessage For="(() => usuario.NombreUsuario)" />
+        </div>
+        <div class="mb-3">
+            <label for="contraseña" class="form-label">Contraseña</label>
+            <InputText type="text" id="contraseña" @bind-Value="usuario.Contraseña" class="form-control" />
+            <ValidationMessage For="(() => usuario.Contraseña)" />
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <InputText type="text" id="email" @bind-Value="usuario.Mail" class="form-control" />
+            <ValidationMessage For="(() => usuario.Mail)" />
+        </div>
+        <button type="submit" class="btn btn-success">Guardar</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Usuario? usuario { get; set; }
+
+
+    public async Task CrearOActualizarUsuario()
+    {
+        try
+        {
+            if (usuario?.Id > 0)
+            {
+                await dataAccess.ModificarUsuario(usuario.Id, usuario);
+            }
+            else
+            {
+                var usuarioCreado = await dataAccess.CrearUsuario(usuario);
+                if (usuarioCreado != null) Navigation.NavigateTo($"/usuarios/{usuarioCreado.Id}");
+                else Navigation.NavigateTo("");
+
+            }
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+
+    }
+}

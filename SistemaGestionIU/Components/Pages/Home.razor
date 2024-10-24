@@ -1,0 +1,66 @@
+﻿@page "/"
+@inject AutenticacionService autenticacionService
+@inject NavigationManager Navigation
+
+<div class="container  min-vh-100">
+    <div class="row">
+        <h1> Proyecto Coderhouse</h1>
+        <div class="col-6">
+            <h3>Bienvenido al Sistema de Gestion!</h3>
+            
+        </div>
+        <div class="col-6">
+            <div class="mb-3">
+                <EditForm Model="usuario" class="bg-light p-4 rounded" OnValidSubmit="@Autenticar">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Usuario</label>
+                        <InputText type="text" class="form-control" id="exampleInputEmail1" @bind-Value="usuario.NombreUsuario" aria-describedby="emailHelp" placeholder="Ingrese su usuario" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label" >Contraseña</label>
+                        <InputText type="password" class="form-control" id="exampleInputPassword1" @bind-Value="usuario.Contraseña" placeholder="Ingrese su contraseña"/>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary"> Iniciar sesión</button>
+                    </div>
+                    <div class="mb-3">
+                        <NavLink class="btn btn-success" href="/usuarios/new"> Crear usuario nuevo </NavLink>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+
+    public UsuarioIngreso usuario = new UsuarioIngreso();
+
+    public async Task Autenticar()
+    {
+        try
+        {
+            var usuarioIngreso = await autenticacionService.Autenticar(usuario);
+            if (usuarioIngreso != null)
+            {
+                Navigation.NavigateTo($"/usuarios/{usuarioIngreso.Id}");
+            }
+            else
+            {
+
+                Navigation.NavigateTo("/");
+            }
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+
+
+}
+
+
+
