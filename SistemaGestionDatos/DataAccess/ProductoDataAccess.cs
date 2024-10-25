@@ -30,6 +30,7 @@ public class ProductoDataAccess
     public List<Producto> ListarProductosUsuario(int idUsuario)
     {
         return _context.Productos
+           .Include(p => p.Ventas) // Incluye la venta del producto
            .Include(p => p.Usuario) // Incluye el usuario del producto
            .Where(p => p.Usuario.Id == idUsuario)
            .ToList();
