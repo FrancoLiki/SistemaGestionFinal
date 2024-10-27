@@ -1,0 +1,31 @@
+﻿@page "/ventas/{Id:int}/editar"
+@inject VentasService ventaAccess
+
+<div class="container">
+    <h2>Modificar venta</h2>
+    <div class="m-1 mb-3">
+        <a class="btn btn-secondary" href="/@ventaAEditar?.IdUsuario/ventas">Volver</a>
+    </div>
+    <div class="m-1">
+        @if (ventaAEditar == null)
+        {
+            <p>No existen ventas</p>
+        }
+        else
+        {
+            <VentasFormulario venta="ventaAEditar" />
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Venta? ventaAEditar;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ventaAEditar = await ventaAccess.ObtenerVenta(Id);
+    }
+}

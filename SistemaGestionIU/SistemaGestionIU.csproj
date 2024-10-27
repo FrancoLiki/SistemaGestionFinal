@@ -70,8 +70,4 @@
       <ProjectReference Include="..\SistemaGestionEntidades\SistemaGestionEntidades.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Components\Pages\Ventas\" />
-    </ItemGroup>
-
 </Project>

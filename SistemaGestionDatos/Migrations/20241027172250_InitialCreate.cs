@@ -90,7 +90,7 @@ namespace SistemaGestionDatos.Migrations
                 {
                     ProductosId = table.Column<int>(type: "int", nullable: false),
                     VentasId = table.Column<int>(type: "int", nullable: false),
-                    Stock = table.Column<int>(type: "int", nullable: false) // Agregar columna Stock
+                    Stock = table.Column<int>(type: "int", nullable:true),
                 },
                 constraints: table =>
                 {
@@ -100,7 +100,7 @@ namespace SistemaGestionDatos.Migrations
                         column: x => x.ProductosId,
                         principalTable: "Productos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProductoVenta_Ventas_VentasId",
                         column: x => x.VentasId,

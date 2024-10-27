@@ -11,6 +11,7 @@ namespace SistemaGestionEntidades.Entidades;
 public class Producto
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
     [Required(ErrorMessage = "El campo Descripción es requerido.")]

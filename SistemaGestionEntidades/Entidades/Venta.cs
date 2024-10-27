@@ -17,7 +17,7 @@ public class Venta
     [MaxLength(150, ErrorMessage = "La Descripción no puede tener más de 150 caracteres.")]
     public string? Comentario { get; set; }
 
-    public List<Producto> Productos { get; set; } = new(); 
+    public List<Producto> Productos { get; set; }
 
     [Required(ErrorMessage = "El id del usuario es requerido.")]
     [Range(0, double.MaxValue, ErrorMessage = "El ID debe ser mayor o igual a 0.")]

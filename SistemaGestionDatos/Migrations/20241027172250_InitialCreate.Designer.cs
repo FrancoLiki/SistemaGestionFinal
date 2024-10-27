@@ -11,7 +11,7 @@ using SistemaGestionDatos.Contexts;
 namespace SistemaGestionDatos.Migrations
 {
     [DbContext(typeof(ProyectoCoderhouseDbContext))]
-    [Migration("20241026225609_InitialCreate")]
+    [Migration("20241027172250_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

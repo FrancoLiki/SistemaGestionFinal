@@ -1,0 +1,41 @@
+﻿@inject NavigationManager Navigation
+@inject VentasService ventaAccess
+
+<EditForm Model="venta" OnValidSubmit="@CrearOActualizarVenta" FormName="ventas-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-control">
+        <div class="mb-3">
+            <label for="comentario" class="form-label">Comentario</label>
+            <InputText type="text" id="comentario" @bind-Value="venta.Comentario" class="form-control" />
+            <ValidationMessage For="(() => venta.Comentario)" />
+        </div>
+        <button type="submit" class="btn btn-success">Guardar</button>
+    </div>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public Venta? venta { get; set; }
+
+
+    public async Task CrearOActualizarVenta()
+    {
+        try
+        {
+            if (venta.Id > 0)
+            {
+                await ventaAccess.ModificarVenta(venta.Id, venta);
+                Navigation.NavigateTo($"/{venta.IdUsuario}/ventas");
+            }
+            else
+            {
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+}

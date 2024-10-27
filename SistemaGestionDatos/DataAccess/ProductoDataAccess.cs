@@ -17,6 +17,7 @@ public class ProductoDataAccess
     {
         return _context.Productos
            .Include(p => p.Ventas) // Incluye las ventas relacionadas
+           .Include(p => p.Usuario)
            .FirstOrDefault(p => p.Id == id);
     }
 
@@ -24,7 +25,6 @@ public class ProductoDataAccess
     {
         return _context.Productos
            .Include(p => p.Usuario)
-           .Include(p => p.Ventas) // Incluye las ventas relacionadas
            .ToList();
     }
 

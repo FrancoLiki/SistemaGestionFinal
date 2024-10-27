@@ -35,10 +35,10 @@ namespace SistemaGestionAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Venta> CrearVenta([FromBody] Venta venta)
+        public ActionResult CrearVenta([FromBody] Venta venta)
         {
-            var ventaCreado = _ventasService.CrearVenta(venta);
-            return CreatedAtAction(nameof(ObtenerVenta), new { id = ventaCreado.Id }, venta);
+            _ventasService.CrearVenta(venta);
+            return NoContent();
         }
 
         [HttpPut("{id}")]

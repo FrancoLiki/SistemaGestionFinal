@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using SistemaGestionDatos.Contexts;
 using SistemaGestionEntidades.Entidades;
 
@@ -29,12 +30,24 @@ public class VentaDataAccess
            .ToList();
     }
 
-    public Venta CrearVenta(Venta venta)
+    public void CrearVenta(Venta venta)
     {
-        _context.Ventas.Add(venta); // Añadir la venta al contexto
-        _context.SaveChanges(); // Guardar cambios en la base de datos
-        return venta; // Retornar la venta creada
+        try
+        {
+            // Agrega la venta
+            _context.Ventas.Add(venta);
+            _context.SaveChanges();
+            
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+
+        }
     }
+
+
+
 
     public void ModificarVenta(Venta venta)
     {

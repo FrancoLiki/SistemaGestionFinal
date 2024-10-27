@@ -21,11 +21,11 @@ namespace SistemaGestionAPI.Controllers
         [HttpGet(Name = "Get Productos")]
         public ActionResult<List<Producto>> ListarProductos([FromQuery(Name = "filtro")] string? filtro)
         {
-            if(filtro == null) return _productosService.ListarProductos();
-            return _productosService.Filtrar(filtro); 
+            if (filtro == null) return _productosService.ListarProductos();
+            return _productosService.Filtrar(filtro);
         }
 
-        
+
 
 
         [HttpGet("{id}")]

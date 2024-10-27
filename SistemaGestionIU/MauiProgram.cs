@@ -21,7 +21,6 @@ public static class MauiProgram
         builder.Services.AddTransient<ProductosService>();
         builder.Services.AddTransient<UsuariosService>();
         builder.Services.AddTransient<VentasService>();
-        builder.Services.AddTransient<ProductosVendidosService>();
 
         builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
         var baseUrl = builder.Configuration["ApiUrl"];
@@ -40,10 +39,6 @@ public static class MauiProgram
 
         builder.Services.AddHttpClient<VentasService>(
            client => client.BaseAddress = new Uri($"{baseUrl}/api/Ventas/")
-           );
-
-        builder.Services.AddHttpClient<ProductosVendidosService>(
-           client => client.BaseAddress = new Uri($"{baseUrl}/api/ProductosVendidos/")
            );
 
 

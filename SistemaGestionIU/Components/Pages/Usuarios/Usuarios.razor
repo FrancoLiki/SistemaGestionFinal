@@ -1,10 +1,11 @@
 ﻿@inject UsuariosService usuarioAccess
 @inject ProductosService productoAccess
+@inject VentasService ventaAccess
 @inject NavigationManager Navigation
 
 @page "/usuarios/{Id:int}"
 
-<div class="container mt-1">
+<div class="container mt-1 mb-4">
     <div class="row">
         <div class="col-6">
             <h2 class="bi bi-people-fill">   Bienvenido @usuario?.Nombre @usuario?.Apellido</h2>
@@ -25,27 +26,38 @@
             </div>
         </div>
     </div>
-
+    <div class="row mt-5">
+        <div class="row justify-content-start">
+            <div class="col-md-4">
+                <label for="productoSelect" class="form-label">¿Qué productos desea listar?</label>
+                <select class="form-select" id="productoSelect" @bind="@selectedValue">
+                    <option value="">¿Qué productos desea listar?</option>
+                    <option value="todos">Todos los productos.</option>
+                    <option value="usuario">Productos cargados por usuario.</option>
+                </select>
+                <button class="btn btn-outline-primary mt-2" @onclick="GuardarSeleccion">Guardar Selección</button>
+            </div>
+        </div>
+    </div>
     <div class="row mt-4">
         <div class="col-6 text-start mt-auto">
-            <h6 class="mt-auto"> Listado de productos agregados por los usuarios    .</h6>
+            <h6 class="mt-auto"> Listado de productos.</h6>
         </div>
         <div class="col-6 text-end">
             <a href="/@usuario?.Id/productos/new">
-                <button type="button" class="btn btn-success ms-1">Agregar productos</button> @*  AGREGA PRODUCTO *@
+                <button type="button" class="btn btn-success ms-1">Agregar productos</button>
             </a>
         </div>
     </div>
 
     <div class="row mt-2">
         <div class="col-12">
-            <table class="table table-striped table-secondary"> @*  SOLAMENTE LISTA LOS PRODUCTOS CARGADOS POR EL USUARIO *@
+            <table class="table table-striped table-secondary"> 
                 <thead>
                     <tr>
                         <th scope="col">Id</th>
                         <th scope="col">Descripcion</th>
                         <th scope="col">Costo</th>
-                        <th scope="col">Precio venta</th>
                         <th scope="col">Stock</th>
                         <th scope="col">Usuario</th>
                         <th scope="col"></th>
@@ -54,49 +66,98 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (productos != null)
+                    @if (productosAListar != null)
                     {
-                        @foreach (Producto? producto in productos)
+                        @foreach (Producto producto in productosAListar)
                         {
                             <tr>
                                 <td>@producto.Id</td>
                                 <td>@producto.Descripcion</td>
                                 <td>@producto.Costo</td>
-                                <td>@producto.PrecioVenta </td>
                                 <td>@producto.Stock</td>
-                                <td>@producto.Usuario.Nombre</td>
+                                <td>@producto.Usuario?.Nombre</td>
                                 <td>
                                     <a href="/productos/@producto.Id/editar">
-                                            <button type="button" class="btn btn-outline-secondary"> Modificar </button> @*  ELIMINA PRODUCTOS CARGADOS POR EL USUARIO *@
+                                            <button type="button" class="btn btn-outline-secondary"> Modificar </button>
                                     </a>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-danger" @onclick="@(() => EliminarProducto(@producto.Id))"> Eliminar</button> @*  ELIMINA PRODUCTOS CARGADOS POR EL USUARIO *@
+                                    <button type="button" class="btn btn-outline-danger" @onclick="@(() => EliminarProducto(@producto.Id))"> Eliminar</button> 
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-secondary" @onclick="@(() => AgregarCarrito(@producto))"> Agregar al carrito </button> @*  ELIMINA PRODUCTOS CARGADOS POR EL USUARIO *@
+                                    <button type="button" class="btn btn-outline-secondary" @onclick="@(() => AgregarCarrito(@producto))"> Agregar al carrito</button>
                                 </td>
                             </tr>
                         }
                     }
                     else
                     {
-                        <h5 class="mt-5">El usuario no ha cargado producto hasta el momento</h5>
+                        <h5 class="mt-5">No se han listado y/o cargado productos hasta el momento.</h5>
                     }
                 </tbody>
             </table>
         </div>
     </div>
+
+    <hr class="my-3 border-top border-secondary">
+    <div>
+        <button class="btn btn-outline-primary" @onclick="@(() => MostrarCarrito())"> Carro de compra </button>
+    </div>
+    @if(ok){
+        <div class="row mt-3">
+            <div class="col-12 text-start mt-auto">
+                <h6 class="mt-auto"> Carro de productos </h6>
+            </div>
+            <div class="col-12 text-start ">
+                <textarea id="comentario" class="form-control" rows="1" placeholder="Agregar un comentario sobre la venta"
+                          @bind="comentario" style="resize: none;"></textarea>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-12">
+                <table class="table table-striped table-secondary">
+                    <thead>
+                        <tr>
+                            <th scope="col">Descripcion</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Stock</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                            @foreach (Producto producto in carrito)
+                            {
+                                <tr>
+                                    <td>@producto.Descripcion</td>
+                                    <td>@producto.PrecioVenta </td>
+                                    <td>
+                                        <!-- Input para seleccionar la cantidad a comprar -->
+                                        <input type="number" class="form-control-sm" min="1" max="@producto.Stock" value="1"
+                                               @onchange="@(e => CambiarCantidad(producto, e))" />
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-danger" @onclick="@(() => EliminarProductoCarrito(@producto))"> Eliminar</button>
+                                    </td>                            
+                                </tr>
+                            }
+                        
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-success" @onclick="@(() => CrearVenta())" >Ejecutar venta</button>
+            </div>
+        </div>
+    }
+
+
     <div class="row mt-3">
-        <div class="col-12 text-start">
+        <div class="col-12">
             <div class="btn-group" role="group">
                 <div>
-                    @*  CARGARA VENTAS LLEVANDOSE EN LA URL EL ID DE USUARIO. EN ESA SOLAPA HABRA UN SELECT CON NOMBRE DE PRODUCTOS A VENDER *@
-                    <NavLink class="btn btn-outline-success ms-3" href=""> Cargar venta </NavLink> 
+                    <a class="btn btn-outline-success" href="/@usuario?.Id/ventas"> Ventas </a> 
                 </div>
                 <div>
-                    @*  EVALUARLO LUEGO *@
-                    <NavLink class="btn btn-secondary ms-3" href=""> Listar productos vendidos </NavLink>
+                    <NavLink class="btn btn-secondary ms-4" href=""> Listar productos vendidos </NavLink>
                 </div>
             </div>
         </div>
@@ -108,11 +169,6 @@
 </div>
 
 
-   
-
-
-
-
 @code {
     [Parameter]
     public int Id { get; set; }
@@ -121,12 +177,22 @@
 
     private List<Producto>? productos = new List<Producto>();
 
-    private List<Producto> carrito = new List<Producto>();
+    private List<Producto>? productosAListar = new List<Producto>();
+
+    private List<Producto>? carrito = new List<Producto>();
+
+    private List<Producto>? listaVenta = new List<Producto>();
+
+    private bool ok = false;
+
+    private string comentario { get; set; } = "";
+
+    private string selectedValue = "";
 
     protected override async Task OnInitializedAsync()
     {
         usuario = await usuarioAccess.ObtenerUsuario(Id);
-        productos = await productoAccess.ListarProductos(Id);
+        productos = await productoAccess.ListarProductos();
     }
 
     public async Task EliminarUsuario(int id)
@@ -138,12 +204,84 @@
     public async Task EliminarProducto(int id)
     {
         await productoAccess.EliminarProducto(id);
-        productos = await productoAccess.ListarProductos(Id);
+        productos = await productoAccess.ListarProductos();
+        productosAListar = productos;
     }
 
     public async Task AgregarCarrito(Producto producto)
     {
-        carrito.Add(producto);
+        // Crear una copia del producto al agregarlo al carrito
+        carrito.Add(new Producto
+            {
+                Descripcion = producto.Descripcion,
+                Costo = producto.Costo,
+                PrecioVenta = producto.PrecioVenta,
+                Stock = producto.Stock,
+                IdUsuario = producto.IdUsuario,
+                Id = producto.Id
+            });
+        listaVenta.Add(new Producto
+            {
+                Descripcion = producto.Descripcion,
+                Costo = producto.Costo,
+                PrecioVenta = producto.PrecioVenta,
+                Stock = producto.Stock,
+                IdUsuario = producto.IdUsuario,
+                Id = producto.Id
+            });
     }
 
+    public async Task EliminarProductoCarrito(Producto producto)
+    {
+        carrito.Remove(producto);
+        listaVenta.Remove(producto);
+    }
+    private async Task CambiarCantidad(Producto producto, ChangeEventArgs e)
+    {
+        int nuevaCantidad = int.Parse(e.Value.ToString());
+        listaVenta.FirstOrDefault(p => p.Id == producto.Id).Stock = nuevaCantidad;
+    }
+
+    private void MostrarCarrito()
+    {
+        if (ok) ok = false;
+        else ok = true;
+    }
+
+    public async Task GuardarSeleccion()
+    {
+        if (selectedValue.Equals(""))
+        {
+            productosAListar = [];
+        }
+        else if (selectedValue.Equals("todos"))
+        {
+            productosAListar = productos;
+        }
+        else
+        {
+            productosAListar = productos.Where(p => p.IdUsuario == Id).ToList();
+        }
+    }
+
+    public async Task CrearVenta()
+    {
+        Venta ventaNueva = new Venta
+        {
+            Comentario = comentario,
+            Productos = listaVenta.Select(p => new Producto
+            {
+                Descripcion = p.Descripcion,
+                Costo = p.Costo,
+                PrecioVenta = p.PrecioVenta,
+                Stock = p.Stock,
+                IdUsuario = p.IdUsuario
+            }).ToList(),
+            IdUsuario = usuario.Id
+        };
+        await ventaAccess.CrearVenta(ventaNueva);
+        comentario = "";
+        listaVenta.Clear();
+        carrito.Clear();
+    }
 }

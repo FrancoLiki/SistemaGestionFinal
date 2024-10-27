@@ -31,17 +31,9 @@ public class ProductosService
         }
     }
 
-    public async Task<List<Producto>?> ListarProductos(int idUsuario)
+    public async Task<List<Producto>?> ListarProductos()
     {
-        try
-        {
-            var productos =  await _httpClient.GetFromJsonAsync<List<Producto>>("");
-            return productos.Where(p => p.Usuario.Id == idUsuario).ToList();
-        }
-        catch (HttpRequestException e)
-        {
-            throw new Exception($"Error al listar los producto: {e.Message}");
-        }
+        return await _httpClient.GetFromJsonAsync<List<Producto>>("");
     }
 
     public async Task<Producto?> CrearProducto(Producto producto)

@@ -23,16 +23,15 @@ public class VentasService
         return _ventaDataAccess.ListarVentas();
     }
 
-    public Venta CrearVenta(Venta venta)
+    public void CrearVenta(Venta venta)
     {
         try
         {
-            _ventaDataAccess.CrearVenta(venta);
-            return venta;
+            _ventaDataAccess.CrearVenta(venta);    
         }
         catch (Exception e)
         {
-            throw new Exception("Error en la creacion de la venta");
+            throw new Exception($"{e}");
         }
     }
 
@@ -45,7 +44,7 @@ public class VentasService
         }
         catch (Exception e)
         {
-            throw new Exception("Error en la actualización de la venta");
+            throw new Exception($"{e}");
         }
 
     }
@@ -58,7 +57,7 @@ public class VentasService
         }
         catch (Exception e)
         {
-            throw new Exception("Error al eliminar la venta");
+            throw new Exception($"{e}");
         }
     }
 
