@@ -5,7 +5,7 @@
 <EditForm Model="usuario" OnValidSubmit="@CrearOActualizarUsuario" FormName="usuarios-form">
     <DataAnnotationsValidator />
     <ValidationSummary />
-    <div class="form-control">
+    <div >
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
             <InputText type="text" id="nombre" @bind-Value="usuario.Nombre" class="form-control" />
@@ -23,7 +23,7 @@
         </div>
         <div class="mb-3">
             <label for="contraseña" class="form-label">Contraseña</label>
-            <InputText type="text" id="contraseña" @bind-Value="usuario.Contraseña" class="form-control" />
+            <InputText type="password" id="contraseña" @bind-Value="usuario.Contraseña" class="form-control" />
             <ValidationMessage For="(() => usuario.Contraseña)" />
         </div>
         <div class="mb-3">
@@ -47,13 +47,12 @@
             if (usuario?.Id > 0)
             {
                 await dataAccess.ModificarUsuario(usuario.Id, usuario);
+                Navigation.NavigateTo($"/usuarios/{usuario.Id}");
             }
             else
             {
                 var usuarioCreado = await dataAccess.CrearUsuario(usuario);
-                if (usuarioCreado != null) Navigation.NavigateTo($"/usuarios/{usuarioCreado.Id}");
-                else Navigation.NavigateTo("");
-
+                Navigation.NavigateTo($"/usuarios/{usuarioCreado.Id}");
             }
         }
         catch(Exception e)

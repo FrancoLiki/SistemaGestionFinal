@@ -1,5 +1,6 @@
 ﻿@inject UsuariosService usuarioAccess
 @inject ProductosService productoAccess
+@inject NavigationManager Navigation
 
 @page "/usuarios/{Id:int}"
 
@@ -11,10 +12,12 @@
         <div class="col-6 text-end">
             <div class="btn-group" role="group">
                 <div>
-                    <NavLink class="btn btn-danger ms-3" href="">Eliminar usuario</NavLink>
+                    <button class="btn btn-danger ms-3" tyoe="button" @onclick="@(() => EliminarUsuario(Id))">Eliminar usuario</button>
                 </div>
                 <div>
-                    <NavLink class="btn btn-secondary ms-3" href="">Modificar usuario</NavLink>
+                    <a href="/usuarios/@usuario?.Id/editar">
+                        <button type="button" class="btn btn-secondary ms-3"> Modificar usuario </button>
+                    </a>
                 </div>
                 <div>
                     <NavLink class="btn btn-secondary ms-3" href="">Cerrar sesion</NavLink>
@@ -25,10 +28,12 @@
 
     <div class="row mt-4">
         <div class="col-6 text-start mt-auto">
-            <h6 class="mt-auto"> Listado de productos agregados por el usuario.</h6>
+            <h6 class="mt-auto"> Listado de productos agregados por los usuarios    .</h6>
         </div>
         <div class="col-6 text-end">
-            <NavLink class="btn btn-outline-success ms-3" href="">Agregar productos</NavLink> @*  AGREGA PRODUCTO AL USUARIO *@
+            <a href="/@usuario?.Id/productos/new">
+                <button type="button" class="btn btn-success ms-1">Agregar productos</button> @*  AGREGA PRODUCTO *@
+            </a>
         </div>
     </div>
 
@@ -42,14 +47,16 @@
                         <th scope="col">Costo</th>
                         <th scope="col">Precio venta</th>
                         <th scope="col">Stock</th>
+                        <th scope="col">Usuario</th>
+                        <th scope="col"></th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (productosUsuario != null)
+                    @if (productos != null)
                     {
-                        @foreach (Producto producto in productosUsuario)
+                        @foreach (Producto? producto in productos)
                         {
                             <tr>
                                 <td>@producto.Id</td>
@@ -57,13 +64,17 @@
                                 <td>@producto.Costo</td>
                                 <td>@producto.PrecioVenta </td>
                                 <td>@producto.Stock</td>
+                                <td>@producto.Usuario.Nombre</td>
                                 <td>
                                     <a href="/productos/@producto.Id/editar">
                                             <button type="button" class="btn btn-outline-secondary"> Modificar </button> @*  ELIMINA PRODUCTOS CARGADOS POR EL USUARIO *@
                                     </a>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-danger"> Eliminar</button> @*  ELIMINA PRODUCTOS CARGADOS POR EL USUARIO *@
+                                    <button type="button" class="btn btn-outline-danger" @onclick="@(() => EliminarProducto(@producto.Id))"> Eliminar</button> @*  ELIMINA PRODUCTOS CARGADOS POR EL USUARIO *@
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-secondary" @onclick="@(() => AgregarCarrito(@producto))"> Agregar al carrito </button> @*  ELIMINA PRODUCTOS CARGADOS POR EL USUARIO *@
                                 </td>
                             </tr>
                         }
@@ -90,9 +101,14 @@
             </div>
         </div>
     </div>
+    
+    
+
+
 </div>
 
 
+   
 
 
 
@@ -103,13 +119,31 @@
 
     private Usuario? usuario = new Usuario();
 
-    private List<Producto>? productosUsuario = new List<Producto>();
+    private List<Producto>? productos = new List<Producto>();
+
+    private List<Producto> carrito = new List<Producto>();
 
     protected override async Task OnInitializedAsync()
     {
         usuario = await usuarioAccess.ObtenerUsuario(Id);
-        // productosUsuario = await productoAccess.ListarProductosUsuario(Id);
+        productos = await productoAccess.ListarProductos(Id);
     }
 
+    public async Task EliminarUsuario(int id)
+    {
+        await usuarioAccess.EliminarUsuario(id);
+        Navigation.NavigateTo("");
+    }
+
+    public async Task EliminarProducto(int id)
+    {
+        await productoAccess.EliminarProducto(id);
+        productos = await productoAccess.ListarProductos(Id);
+    }
+
+    public async Task AgregarCarrito(Producto producto)
+    {
+        carrito.Add(producto);
+    }
 
 }

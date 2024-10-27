@@ -1,0 +1,58 @@
+﻿@inject ProductosService productoAccess
+@inject NavigationManager NavigationManager
+
+<EditForm Model="producto" OnValidSubmit="@CrearOActualizarProducto" FormName="productos-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary/>
+    <div>
+        <div class="mb-3">
+            <label for="descripcion" class="form-label"> Descripcion</label>
+            <InputText type="text" id="descripcion" @bind-Value="producto.Descripcion" class="form-control" />
+            <ValidationMessage For="(() => producto.Descripcion)" />
+        </div>
+        <div class="mb-3">
+            <label for="costo" class="form-label"> Costo</label>
+            <InputNumber type="number" id="costo" @bind-Value="producto.Costo" class="form-control" />
+            <ValidationMessage For="(() => producto.Costo)" />
+        </div>
+        <div class="mb-3">
+            <label for="precioVenta" class="form-label"> Precio venta</label>
+            <InputNumber type="number" id="precioVenta" @bind-Value="producto.PrecioVenta" class="form-control" />
+            <ValidationMessage For="(() => producto.PrecioVenta)" />
+        </div>
+        <div class="mb-3">
+            <label for="stock" class="form-label"> Stock</label>
+            <InputNumber type="number" id="stock" @bind-Value="producto.Stock" class="form-control" />
+            <ValidationMessage For="(() => producto.Stock)" />
+        </div>
+        <button type="submit" class="btn btn-success">Guardar</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Producto? producto { get; set; }
+    
+
+
+    public async Task CrearOActualizarProducto()
+    {
+        try
+        {
+            if (producto.Id > 0)
+            {
+                await productoAccess.ModificarProducto(producto.Id, producto);
+                NavigationManager.NavigateTo($"/usuarios/{producto.IdUsuario}");
+            }
+            else
+            {
+                var productoCreado = await productoAccess.CrearProducto(producto);
+                NavigationManager.NavigateTo($"/usuarios/{productoCreado?.IdUsuario}");
+            }
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+}

@@ -38,7 +38,7 @@ public class UsuarioDataAccess
             usuarioExistente.Nombre = usuario.Nombre;
             usuarioExistente.Apellido = usuario.Apellido;
             usuarioExistente.NombreUsuario = usuario.NombreUsuario;
-            if (!string.IsNullOrEmpty(usuario.Contraseña))
+            if (usuario.Contraseña != usuarioExistente.Contraseña)
             {
                 usuarioExistente.Contraseña = BCrypt.Net.BCrypt.HashPassword(usuario.Contraseña);
             }

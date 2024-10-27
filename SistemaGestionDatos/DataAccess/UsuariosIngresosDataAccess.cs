@@ -12,9 +12,9 @@ public class UsuariosIngresosDataAccess
         _context = context;
     }
 
-    public UsuarioIngreso? ObtenerUsuario(string nombreUsuario)
+    public UsuarioIngreso? ObtenerUsuario(int idUsuario)
     {
-        return _context.UsuariosIngresos.FirstOrDefault(p => p.NombreUsuario == nombreUsuario);
+        return _context.UsuariosIngresos.FirstOrDefault(p => p.Id == idUsuario);
     }
 
     public void CrearUsuario(UsuarioIngreso usuario)
@@ -24,20 +24,23 @@ public class UsuariosIngresosDataAccess
         _context.SaveChanges();
     }
 
-    public void ModificarUsuario(string nonbreUsuario, string contraseña)
+    public void ModificarUsuario(Usuario usuario)
     {
-        var usuarioExistente = ObtenerUsuario(nonbreUsuario);
+        var usuarioExistente = ObtenerUsuario(usuario.Id);
         if(usuarioExistente != null)
         {
-            usuarioExistente.NombreUsuario = nonbreUsuario;
-            usuarioExistente.Contraseña = BCrypt.Net.BCrypt.HashPassword(contraseña);
+            usuarioExistente.NombreUsuario = usuario.NombreUsuario;
+            if (usuario.Contraseña != usuarioExistente.Contraseña)
+            {
+                usuarioExistente.Contraseña = BCrypt.Net.BCrypt.HashPassword(usuario.Contraseña);
+            }
             _context.SaveChanges();
         }
     }
 
-    public void EliminarUsuario(string nombreUsuario)
+    public void EliminarUsuario(int idUsuario)
     {
-        var usuarioEliminar = ObtenerUsuario(nombreUsuario);
+        var usuarioEliminar = ObtenerUsuario(idUsuario);
         if (usuarioEliminar != null)
         {
             _context.UsuariosIngresos.Remove(usuarioEliminar);

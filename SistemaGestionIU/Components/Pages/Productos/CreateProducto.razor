@@ -1,0 +1,33 @@
+﻿@page "/{IdUsuario:int}/productos/new"
+@inject ProductosService dataAccess
+@inject UsuariosService usuarioAccess
+
+<div class="container">
+    <h1>Agregar nuevo producto</h1>
+    <div class="m-1 mb-3">
+        <a class="btn btn-secondary" href="/usuarios/@IdUsuario">Volver</a>
+    </div>
+    <div class="m-1">
+        <ProductosFormulario producto="productoNuevo" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int IdUsuario { get; set; }
+    private Producto productoNuevo = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            productoNuevo.IdUsuario = IdUsuario;
+        }
+        catch (Exception ex)
+        {
+            // Manejo de error, por ejemplo, mostrar un mensaje o registrar el error
+            Console.WriteLine(ex.Message);
+        }
+    }
+}
+

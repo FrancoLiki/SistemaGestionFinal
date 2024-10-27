@@ -12,21 +12,16 @@ public class ProductosService
         _productoDataAccess = productoDataAccess;
     }
 
-    public Producto ObtenerProducto(int id)
+    public Producto? ObtenerProducto(int id)
     {
-        Producto producto = _productoDataAccess.ObtenerProducto(id);
-        if (producto == null) throw new Exception("El producto solicitado no existe");
+        Producto? producto = _productoDataAccess.ObtenerProducto(id);
         return producto;
     }
-    public List<Producto> ListarProductos()
+    public List<Producto>? ListarProductos()
     {
         return _productoDataAccess.ListarProductos();
     }
 
-    public List<Producto> ListarProductosUsuario(int idUsuario)
-    {
-        return _productoDataAccess.ListarProductosUsuario(idUsuario);
-    }
 
     public Producto CrearProducto(Producto producto)
     {
@@ -38,6 +33,7 @@ public class ProductosService
         }
         catch (Exception e)
         {
+            
             throw new Exception("Error en la creacion del producto" + e.Message,e);
         }
     }

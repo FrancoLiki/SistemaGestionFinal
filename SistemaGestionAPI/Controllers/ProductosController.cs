@@ -25,11 +25,7 @@ namespace SistemaGestionAPI.Controllers
             return _productosService.Filtrar(filtro); 
         }
 
-        [HttpGet("usuario/{idUsuario}")]
-        public ActionResult<List<Producto>> ListarProductosUsuarios(int idUsuario)
-        {
-            return _productosService.ListarProductosUsuario(idUsuario);
-        }
+        
 
 
         [HttpGet("{id}")]

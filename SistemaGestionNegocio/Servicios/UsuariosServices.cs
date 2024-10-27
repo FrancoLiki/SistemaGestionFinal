@@ -45,7 +45,7 @@ public class UsuariosServices
         try
         {
             _usuarioDataAccess.ModificarUsuario(usuario);
-            _usuariosIngresosDataAccess.ModificarUsuario(usuario.NombreUsuario,usuario.Contraseña);
+            _usuariosIngresosDataAccess.ModificarUsuario(usuario);
         }
         catch (Exception e)
         {
@@ -57,8 +57,8 @@ public class UsuariosServices
     {
         try
         {
+            _usuariosIngresosDataAccess.EliminarUsuario(id);
             _usuarioDataAccess.EliminarUsuario(id);
-            _usuariosIngresosDataAccess.EliminarUsuario(ObtenerUsuario(id).NombreUsuario);
         }
         catch (Exception e)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,8 +33,13 @@ public class Producto
     [Range(0, double.MaxValue, ErrorMessage = "El Stock debe ser mayor o igual a 0.")]
     public int Stock { get; set; }
 
-    public List<Venta>? Ventas { get; set; }
+    public List<Venta>? Ventas { get; set; } = new();
 
+    // Define explicitamente la clave externa
     [Required]
-    public Usuario Usuario { get; set; }
+    [ForeignKey("Usuario")]
+    public int IdUsuario { get; set; }
+
+    // Propiedad de navegación para la relación
+    public Usuario? Usuario { get; set; }
 }

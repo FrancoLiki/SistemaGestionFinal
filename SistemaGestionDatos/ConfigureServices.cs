@@ -17,7 +17,7 @@ public static class ConfigureServices
             }
         );
         services.AddScoped<ProductoDataAccess>();
-        services.AddScoped<ProductoVendidoDataAccess>();
+        //services.AddScoped<ProductoVendidoDataAccess>();
         services.AddScoped<VentaDataAccess>();
         services.AddScoped<UsuarioDataAccess>();
         services.AddScoped<UsuariosIngresosDataAccess>();

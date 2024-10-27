@@ -17,8 +17,72 @@ public class ProductosService
         _httpClient = httpClient;
     }
 
-    public async Task<List<Producto>?> ListarProductosUsuario(int idUsuario)
+    
+
+    public async Task<Producto?> ObtenerProducto(int id)
     {
-        return await _httpClient.GetFromJsonAsync<List<Producto>>($"{idUsuario}");
+        try
+        {
+            return await _httpClient.GetFromJsonAsync<Producto>($"{id}");
+        }
+        catch (HttpRequestException e)
+        {
+            throw new Exception($"Error al obtener el producto: {e.Message}");
+        }
+    }
+
+    public async Task<List<Producto>?> ListarProductos(int idUsuario)
+    {
+        try
+        {
+            var productos =  await _httpClient.GetFromJsonAsync<List<Producto>>("");
+            return productos.Where(p => p.Usuario.Id == idUsuario).ToList();
+        }
+        catch (HttpRequestException e)
+        {
+            throw new Exception($"Error al listar los producto: {e.Message}");
+        }
+    }
+
+    public async Task<Producto?> CrearProducto(Producto producto)
+    {
+        try
+        {
+            var response = await _httpClient.PostAsJsonAsync("", producto);
+
+            if (response.IsSuccessStatusCode) 
+            { 
+                return await response.Content.ReadFromJsonAsync<Producto>();
+            }
+            throw new Exception("Error al crear el producto: " + response.ReasonPhrase);
+        }
+        catch (HttpRequestException e)
+        {
+            throw new Exception($"Error al crear el producto: {e.Message}");
+        }
+    }
+
+    public async Task ModificarProducto(int id, Producto producto)
+    {
+        try
+        {
+            await _httpClient.PutAsJsonAsync($"{id}", producto);
+        }
+        catch (HttpRequestException e)
+        {
+            throw new Exception($"Error al modificar el producto: {e.Message}");
+        }
+    }
+
+    public async Task EliminarProducto(int id)
+    {
+        try
+        {
+            await _httpClient.DeleteAsync($"{id}");
+        }
+        catch (HttpRequestException e) 
+        {
+            throw new Exception($"Error al eliminar el producto: {e.Message}");
+        }
     }
 }
