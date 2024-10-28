@@ -2,9 +2,9 @@
 @inject UsuariosService dataAccess
 
 <div class="container">
-    <h1>Editar usuario</h1>
+    <h3>Editar usuario</h3>
     <div class="m-1 mb-3">
-        <NavLink class="btn btn-secondary" href="">Volver al inicio</NavLink>
+        <a class="btn btn-secondary" href="/usuarios/@usuarioAEditar?.Id">Volver al inicio</a>
     </div>
     <div class="m-1">
         @if (usuarioAEditar == null)

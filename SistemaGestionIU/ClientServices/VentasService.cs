@@ -43,10 +43,9 @@ public class VentasService
     {
         try
         {
-            var response = await _httpClient.PutAsJsonAsync($"{id}", venta);
-            response.EnsureSuccessStatusCode();
+            await _httpClient.PutAsJsonAsync($"{id}", venta);
         }
-        catch(HttpRequestException e)
+        catch(Exception e)
         {
             throw new Exception($"{e}");
         }
