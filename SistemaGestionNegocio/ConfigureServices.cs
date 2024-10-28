@@ -11,7 +11,6 @@ public static class ConfigureServices
     {
         services.ConfigureData(configuration);
         services.AddScoped<ProductosService>();
-        //services.AddScoped<ProductosVendidosService>();
         services.AddScoped<UsuariosServices>();
         services.AddScoped<VentasService>(); 
         return services;

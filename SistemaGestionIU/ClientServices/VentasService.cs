@@ -41,11 +41,14 @@ public class VentasService
 
     public async Task ModificarVenta(int id, Venta venta)
     {
-        await _httpClient.PutAsJsonAsync($"{id}", venta);
-    }
-
-    public async Task EliminarVenta(int id)
-    {
-        await _httpClient.DeleteAsync($"{id}");
+        try
+        {
+            var response = await _httpClient.PutAsJsonAsync($"{id}", venta);
+            response.EnsureSuccessStatusCode();
+        }
+        catch(HttpRequestException e)
+        {
+            throw new Exception($"{e}");
+        }
     }
 }

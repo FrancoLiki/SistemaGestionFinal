@@ -17,7 +17,6 @@ public class VentaDataAccess
     public Venta? ObtenerVenta(int id)
     {
         return _context.Ventas
-            .Include(v => v.Productos) // Incluye los productos relacionados
             .Include(v => v.Usuario)   // Incluye los usuarios relacionados
             .FirstOrDefault(v => v.Id == id);
     }
@@ -25,8 +24,7 @@ public class VentaDataAccess
     public List<Venta> ListarVentas()
     {
         return _context.Ventas
-           .Include(v => v.Productos) // Incluye los productos relacionados
-           .Include(v => v.Usuario) // Incluye los usuarios relacionados
+            .Include(p => p.Usuario)
            .ToList();
     }
 
@@ -46,9 +44,6 @@ public class VentaDataAccess
         }
     }
 
-
-
-
     public void ModificarVenta(Venta venta)
     {
         var ventaExistente = _context.Ventas.Find(venta.Id);
@@ -56,23 +51,7 @@ public class VentaDataAccess
         {
             // Actualizar las propiedades
             ventaExistente.Comentario = venta.Comentario;
-            ventaExistente.Productos = venta.Productos; // Actualizar la relación de productos
             _context.SaveChanges(); // Guardar cambios en la base de datos
         }
-    }
-
-    public void EliminarVenta(int id)
-    {
-        var venta = _context.Ventas.Find(id);
-        if (venta != null)
-        {
-            _context.Ventas.Remove(venta); // Eliminar la venta
-            _context.SaveChanges(); // Guardar cambios en la base de datos
-        }
-    }
-
-    public List<Venta> Filtrar(string filtro)
-    {
-        return _context.Ventas.Where(p => p.Comentario.Contains(filtro)).ToList();
     }
 }

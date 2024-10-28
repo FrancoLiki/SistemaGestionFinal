@@ -24,14 +24,9 @@
     {
         try
         {
-            if (venta.Id > 0)
-            {
-                await ventaAccess.ModificarVenta(venta.Id, venta);
-                Navigation.NavigateTo($"/{venta.IdUsuario}/ventas");
-            }
-            else
-            {
-            }
+            await ventaAccess.ModificarVenta(venta.Id, venta);
+            Navigation.NavigateTo($"/{venta.IdUsuario}/ventas");
+           
         }
         catch (Exception e)
         {

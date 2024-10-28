@@ -47,12 +47,5 @@ namespace SistemaGestionAPI.Controllers
             _ventasService.ModificarVenta(venta);
             return NoContent();
         }
-
-        [HttpDelete("{id}")]
-        public ActionResult EliminarVenta([FromRoute(Name = "id")] int id)
-        {
-            _ventasService.EliminarVenta(id);
-            return NoContent();
-        }
     }
 }

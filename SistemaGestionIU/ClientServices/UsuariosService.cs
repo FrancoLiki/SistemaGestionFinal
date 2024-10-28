@@ -54,10 +54,4 @@ public class UsuariosService
     {
         await _httpClient.DeleteAsync($"{id}");
     }
-
-    public async Task<List<Usuario>?> Filtrar(string filtro)
-    {
-        return await _httpClient.GetFromJsonAsync<List<Usuario>>(
-            QueryHelpers.AddQueryString("", new Dictionary<string, string>() { { "filtro", filtro } }));
-    }
 }

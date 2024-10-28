@@ -37,7 +37,6 @@ public class VentasService
 
     public void ModificarVenta(Venta venta)
     {
-
         try
         {
             _ventaDataAccess.ModificarVenta(venta);
@@ -47,22 +46,5 @@ public class VentasService
             throw new Exception($"{e}");
         }
 
-    }
-
-    public void EliminarVenta(int id)
-    {
-        try
-        {
-            _ventaDataAccess.EliminarVenta(id);
-        }
-        catch (Exception e)
-        {
-            throw new Exception($"{e}");
-        }
-    }
-
-    public List<Venta> Filtrar(string filtro)
-    {
-        return _ventaDataAccess.Filtrar(filtro);
     }
 }
